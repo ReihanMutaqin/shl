@@ -1,8 +1,16 @@
-import { handle } from "hono/vercel";
-import app from "../../server/boot.js";
+import { createNextApiHandler } from "@trpc/server/adapters/next";
+import { appRouter } from "../../server/router.js";
+import { createContext } from "../../server/context.js";
 
 export const config = {
-  runtime: "nodejs",
+  api: {
+    bodyParser: {
+      sizeLimit: "50mb",
+    },
+  },
 };
 
-export default handle(app);
+export default createNextApiHandler({
+  router: appRouter,
+  createContext,
+});
