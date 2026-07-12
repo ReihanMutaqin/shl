@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createRouter, authedQuery, adminQuery } from "../middleware";
-import { getDb } from "../queries/connection";
-import { absensi } from "@db/schema";
+import { createRouter, authedQuery, adminQuery } from "../middleware.js";
+import { getDb } from "../queries/connection.js";
+import { absensi } from "../../db/schema.js";
 import { eq, and, sql } from "drizzle-orm";
 
 const SHIFT_JAM_MASUK: Record<string, string> = {

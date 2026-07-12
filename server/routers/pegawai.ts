@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createRouter, adminQuery, authedQuery } from "../middleware";
-import { getDb } from "../queries/connection";
-import { pegawai } from "@db/schema";
+import { createRouter, adminQuery, authedQuery } from "../middleware.js";
+import { getDb } from "../queries/connection.js";
+import { pegawai } from "../../db/schema.js";
 import { eq, and, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 

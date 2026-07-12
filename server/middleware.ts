@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import type { TrpcContext } from "./context";
-import { getDb } from "./queries/connection";
-import { sessions } from "@db/schema";
+import type { TrpcContext } from "./context.js";
+import { getDb } from "./queries/connection.js";
+import { sessions } from "../db/schema.js";
 import { eq, and, gt } from "drizzle-orm";
 
 const t = initTRPC.context<TrpcContext>().create({

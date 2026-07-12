@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { createRouter, authedQuery, adminQuery } from "../middleware";
-import { getDb } from "../queries/connection";
-import { cuti } from "@db/schema";
+import { createRouter, authedQuery, adminQuery } from "../middleware.js";
+import { getDb } from "../queries/connection.js";
+import { cuti } from "../../db/schema.js";
 import { eq, sql, desc } from "drizzle-orm";
 
 export const cutiRouter = createRouter({
