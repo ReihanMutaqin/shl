@@ -7,9 +7,14 @@ const fullSchema = { ...schema, ...relations };
 
 let instance: ReturnType<typeof drizzle<typeof fullSchema>>;
 
+import mysql from "mysql2/promise";
+
+let poolConnection: mysql.Pool;
+
 export function getDb() {
   if (!instance) {
-    instance = drizzle(env.databaseUrl, {
+    poolConnection = mysql.createPool(env.databaseUrl);
+    instance = drizzle(poolConnection, {
       mode: "planetscale",
       schema: fullSchema,
     });
