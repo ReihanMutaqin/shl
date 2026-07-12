@@ -9,6 +9,10 @@ import { env } from "./lib/env.js";
 
 const app = new Hono<{ Bindings: HttpBindings }>();
 
+app.get("/api/test", (c) => {
+  return c.json({ status: "hono is alive" });
+});
+
 app.use(cors({
   origin: env.isProduction ? undefined : "http://localhost:3000",
   credentials: true,
