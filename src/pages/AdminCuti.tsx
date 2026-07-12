@@ -29,7 +29,7 @@ export default function AdminCuti() {
   const [success, setSuccess] = useState("");
 
   const { data: cutiList, isLoading } = trpc.cuti.getAll.useQuery(
-    { status: filterStatus as "pending" | "disetujui" | "ditolak" | undefined },
+    { status: filterStatus ? (filterStatus as "pending" | "disetujui" | "ditolak") : undefined },
     { refetchInterval: 30000 }
   );
 
