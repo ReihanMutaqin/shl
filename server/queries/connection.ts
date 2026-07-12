@@ -1,11 +1,11 @@
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
 import { env } from "../lib/env.js";
 import * as schema from "../../db/schema.js";
 import * as relations from "../../db/relations.js";
 
 const fullSchema = { ...schema, ...relations };
 
-let instance: ReturnType<typeof drizzle<typeof fullSchema>>;
+let instance: MySql2Database<typeof fullSchema>;
 
 import mysql from "mysql2/promise";
 
