@@ -127,7 +127,7 @@ export default function Login() {
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-500">
-              <p>Default Admin: <strong>ADMIN001</strong> / <strong>admin123</strong></p>
+              <p>&copy; 2026 SHL</p>
             </div>
           </CardContent>
         </Card>
