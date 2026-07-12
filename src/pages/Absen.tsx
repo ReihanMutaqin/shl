@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
-import { uploadFotoAbsen } from "@/lib/firebase";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -146,17 +146,10 @@ export default function Absen() {
     }
 
     setIsProcessing(true);
-    try {
-      const today = new Date().toISOString().split("T")[0];
-      const fotoUrl = await uploadFotoAbsen(user!.id, today, "masuk", foto);
       checkInMutation.mutate({
         shift: shift as "pagi" | "siang" | "malam" | "pagi+siang" | "siang+malam" | "malam+pagi",
-        fotoMasuk: fotoUrl,
+        fotoMasuk: foto,
       });
-    } catch {
-      setError("Gagal mengupload foto");
-      setIsProcessing(false);
-    }
   };
 
   const handleCheckOut = async () => {
@@ -169,16 +162,9 @@ export default function Absen() {
     }
 
     setIsProcessing(true);
-    try {
-      const today = new Date().toISOString().split("T")[0];
-      const fotoUrl = await uploadFotoAbsen(user!.id, today, "keluar", foto);
       checkOutMutation.mutate({
-        fotoKeluar: fotoUrl,
+        fotoKeluar: foto,
       });
-    } catch {
-      setError("Gagal mengupload foto");
-      setIsProcessing(false);
-    }
   };
 
   const getStatusColor = (status: string) => {

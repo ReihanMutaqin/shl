@@ -32,8 +32,8 @@ export const absensi = mysqlTable("absensi", {
   shift: varchar("shift", { length: 50 }).notNull(),
   jamMasuk: timestamp("jam_masuk"),
   jamKeluar: timestamp("jam_keluar"),
-  fotoMasuk: varchar("foto_masuk", { length: 500 }),
-  fotoKeluar: varchar("foto_keluar", { length: 500 }),
+  fotoMasuk: text("foto_masuk"),
+  fotoKeluar: text("foto_keluar"),
   lokasiMasuk: varchar("lokasi_masuk", { length: 255 }),
   lokasiKeluar: varchar("lokasi_keluar", { length: 255 }),
   status: mysqlEnum("status", ["hadir", "terlambat", "izin", "sakit", "alpha"])
