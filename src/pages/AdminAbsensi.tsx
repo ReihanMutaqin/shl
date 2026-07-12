@@ -6,6 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import {
   ArrowLeft,
@@ -172,6 +179,7 @@ export default function AdminAbsensi() {
                       <th className="pb-3 pr-4 font-medium">Shift</th>
                       <th className="pb-3 pr-4 font-medium hidden sm:table-cell">Jam Masuk</th>
                       <th className="pb-3 pr-4 font-medium hidden sm:table-cell">Jam Keluar</th>
+                      <th className="pb-3 pr-4 font-medium">Foto</th>
                       <th className="pb-3 font-medium">Status</th>
                     </tr>
                   </thead>
@@ -211,6 +219,36 @@ export default function AdminAbsensi() {
                           ) : (
                             "-"
                           )}
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div className="flex flex-col gap-1">
+                            {a.fotoMasuk && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm" className="text-[10px] h-6 px-2 w-24">Foto Masuk</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                  <DialogHeader>
+                                    <DialogTitle>Foto Masuk - {a.pegawai?.nama}</DialogTitle>
+                                  </DialogHeader>
+                                  <img src={a.fotoMasuk} alt="Foto Masuk" className="w-full rounded-md object-contain max-h-[70vh]" />
+                                </DialogContent>
+                              </Dialog>
+                            )}
+                            {a.fotoKeluar && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm" className="text-[10px] h-6 px-2 w-24">Foto Keluar</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                  <DialogHeader>
+                                    <DialogTitle>Foto Keluar - {a.pegawai?.nama}</DialogTitle>
+                                  </DialogHeader>
+                                  <img src={a.fotoKeluar} alt="Foto Keluar" className="w-full rounded-md object-contain max-h-[70vh]" />
+                                </DialogContent>
+                              </Dialog>
+                            )}
+                          </div>
                         </td>
                         <td className="py-3">
                           <Badge className={`${getStatusColor(a.status)} text-xs capitalize`}>

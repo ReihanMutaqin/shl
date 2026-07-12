@@ -53,18 +53,19 @@ export const absensiRouter = createRouter({
       const now = new Date();
       const today = getTodayStr();
 
-      // Check if already checked in today
+      // Get the latest check-in for today
       const existing = await db.query.absensi.findFirst({
         where: and(
           eq(absensi.pegawaiId, pegawaiId),
           sql`DATE(${absensi.tanggal}) = ${today}`
         ),
+        orderBy: (absensi, { desc }) => [desc(absensi.jamMasuk)],
       });
 
-      if (existing) {
+      if (existing && !existing.jamKeluar) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Anda sudah absen masuk hari ini",
+          message: "Anda harus absen keluar terlebih dahulu sebelum absen masuk lagi",
         });
       }
 
@@ -111,6 +112,7 @@ export const absensiRouter = createRouter({
           eq(absensi.pegawaiId, pegawaiId),
           sql`DATE(${absensi.tanggal}) = ${today}`
         ),
+        orderBy: (absensi, { desc }) => [desc(absensi.jamMasuk)],
       });
 
       if (!existing) {
@@ -154,6 +156,7 @@ export const absensiRouter = createRouter({
         eq(absensi.pegawaiId, ctx.user.id),
         sql`DATE(${absensi.tanggal}) = ${today}`
       ),
+      orderBy: (absensi, { desc }) => [desc(absensi.jamMasuk)],
     });
 
     return data || null;

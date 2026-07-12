@@ -99,9 +99,7 @@ export default function Absen() {
       });
       setStream(mediaStream);
       setCameraActive(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
+      // Removed the synchronous assignment to videoRef.current here, we will use a callback ref instead
     } catch (err) {
       setError("Tidak dapat mengakses kamera. Pastikan izin kamera diberikan.");
     }
@@ -113,6 +111,14 @@ export default function Absen() {
       setStream(null);
     }
     setCameraActive(false);
+  }, [stream]);
+
+  // Callback ref for the video element to attach stream when it mounts
+  const videoCallbackRef = useCallback((node: HTMLVideoElement | null) => {
+    (videoRef as any).current = node; // Keep existing videoRef logic working for captureFoto
+    if (node && stream) {
+      node.srcObject = stream;
+    }
   }, [stream]);
 
   const captureFoto = useCallback(() => {
@@ -297,7 +303,7 @@ export default function Absen() {
         )}
 
         {/* Check In Form */}
-        {!todayAbsen?.jamMasuk && (
+        {(!todayAbsen || todayAbsen.jamKeluar) && (
           <Card className="border-0 shadow-sm">
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-gray-800 flex items-center gap-2">
@@ -328,7 +334,7 @@ export default function Absen() {
                   {cameraActive ? (
                     <>
                       <video
-                        ref={videoRef}
+                        ref={videoCallbackRef}
                         autoPlay
                         playsInline
                         muted
@@ -411,7 +417,7 @@ export default function Absen() {
                   {cameraActive ? (
                     <>
                       <video
-                        ref={videoRef}
+                        ref={videoCallbackRef}
                         autoPlay
                         playsInline
                         muted
@@ -481,10 +487,19 @@ export default function Absen() {
           <Card className="border-0 shadow-sm bg-green-50">
             <CardContent className="p-6 text-center">
               <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-green-800">Absensi Selesai</h3>
-              <p className="text-sm text-green-600 mt-1">
-                Anda sudah melakukan absen masuk dan keluar hari ini.
+              <h3 className="font-semibold text-green-800">Sesi Absensi Selesai</h3>
+              <p className="text-sm text-green-600 mt-1 mb-4">
+                Anda sudah melakukan absen masuk dan keluar.
               </p>
+              <Button
+                variant="outline"
+                className="w-full border-green-600 text-green-700 hover:bg-green-100"
+                onClick={() => {
+                  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }}
+              >
+                Mulai Shift Baru
+              </Button>
             </CardContent>
           </Card>
         )}
