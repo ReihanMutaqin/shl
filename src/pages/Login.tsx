@@ -23,11 +23,11 @@ export default function Login() {
       expires.setDate(expires.getDate() + 7);
       document.cookie = `session_token=${data.token}; expires=${expires.toUTCString()}; path=/;`;
 
-      // Redirect based on role
+      // Redirect based on role (use window.location to ensure fresh auth state)
       if (data.user.role === "admin") {
-        navigate("/admin");
+        window.location.href = "/admin";
       } else {
-        navigate("/absen");
+        window.location.href = "/absen";
       }
     },
     onError: (err) => {
