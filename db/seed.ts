@@ -1,4 +1,4 @@
-import { getDb } from "../api/queries/connection";
+import { getDb } from "../server/queries/connection";
 import { pegawai } from "./schema";
 import bcrypt from "bcryptjs";
 
