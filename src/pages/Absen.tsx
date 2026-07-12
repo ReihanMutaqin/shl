@@ -23,11 +23,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const SHIFTS = [
-  { value: "pagi", label: "Pagi (07:00 - 14:00)" },
+  { value: "pagi", label: "Pagi (08:00 - 14:00)" },
   { value: "siang", label: "Siang (14:00 - 21:00)" },
-  { value: "malam", label: "Malam (21:00 - 07:00)" },
-  { value: "pagi+siang", label: "Pagi + Siang (07:00 - 21:00)" },
-  { value: "siang+malam", label: "Siang + Malam (14:00 - 07:00)" },
+  { value: "malam", label: "Malam (21:00 - 08:00)" },
+  { value: "pagi+siang", label: "Pagi + Siang (08:00 - 21:00)" },
+  { value: "siang+malam", label: "Siang + Malam (14:00 - 08:00)" },
   { value: "malam+pagi", label: "Malam + Pagi (21:00 - 14:00)" },
 ];
 
@@ -282,6 +282,9 @@ export default function Absen() {
                 <div className="bg-gray-50 rounded-lg p-3">
                   <p className="text-xs text-gray-500">Status</p>
                   <p className="font-semibold text-sm capitalize">{todayAbsen.status}</p>
+                  {todayAbsen.keterangan && (
+                    <p className="text-xs text-gray-500 mt-1">{todayAbsen.keterangan}</p>
+                  )}
                 </div>
               </div>
             </CardContent>

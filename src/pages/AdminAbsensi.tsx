@@ -251,9 +251,16 @@ export default function AdminAbsensi() {
                           </div>
                         </td>
                         <td className="py-3">
-                          <Badge className={`${getStatusColor(a.status)} text-xs capitalize`}>
-                            {a.status}
-                          </Badge>
+                          <div className="flex flex-col items-start gap-1">
+                            <Badge className={`${getStatusColor(a.status)} text-xs capitalize`}>
+                              {a.status}
+                            </Badge>
+                            {a.keterangan && (
+                              <span className="text-[10px] text-gray-500 max-w-[120px] leading-tight">
+                                {a.keterangan}
+                              </span>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}

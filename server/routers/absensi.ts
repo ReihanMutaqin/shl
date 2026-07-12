@@ -6,26 +6,38 @@ import { absensi } from "../../db/schema.js";
 import { eq, and, sql } from "drizzle-orm";
 
 const SHIFT_JAM_MASUK: Record<string, string> = {
-  pagi: "07:00",
+  pagi: "08:00",
   siang: "14:00",
   malam: "21:00",
-  "pagi+siang": "07:00",
+  "pagi+siang": "08:00",
   "siang+malam": "14:00",
   "malam+pagi": "21:00",
 };
 
-function isTerlambat(shift: string, jamMasuk: Date): boolean {
+function getStatusAbsensi(shift: string, jamMasuk: Date): { status: "hadir" | "terlambat", keterangan: string | null, isTooEarly: boolean } {
   const jamMasukStr = SHIFT_JAM_MASUK[shift];
-  if (!jamMasukStr) return false;
+  if (!jamMasukStr) return { status: "hadir", keterangan: null, isTooEarly: false };
 
   const [jam, menit] = jamMasukStr.split(":").map(Number);
   const batas = new Date(jamMasuk);
   batas.setHours(jam, menit, 0, 0);
 
-  // toleransi 15 menit
-  batas.setMinutes(batas.getMinutes() + 15);
+  const diffMs = jamMasuk.getTime() - batas.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
 
-  return jamMasuk > batas;
+  if (diffMins < -30) {
+    return { status: "hadir", keterangan: null, isTooEarly: true };
+  }
+
+  if (diffMins > 0) {
+    return {
+      status: "terlambat",
+      keterangan: `Terlambat ${diffMins} menit`,
+      isTooEarly: false,
+    };
+  }
+
+  return { status: "hadir", keterangan: null, isTooEarly: false };
 }
 
 function getTodayStr(): string {
@@ -69,7 +81,14 @@ export const absensiRouter = createRouter({
         });
       }
 
-      const status = isTerlambat(input.shift, now) ? "terlambat" : "hadir";
+      const absenStatus = getStatusAbsensi(input.shift, now);
+
+      if (absenStatus.isTooEarly) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Belum bisa absen. Anda hanya bisa absen paling cepat 30 menit sebelum shift dimulai.",
+        });
+      }
 
       const result = await db.insert(absensi).values({
         pegawaiId,
@@ -78,7 +97,8 @@ export const absensiRouter = createRouter({
         jamMasuk: now,
         fotoMasuk: input.fotoMasuk,
         lokasiMasuk: input.lokasiMasuk || null,
-        status,
+        status: absenStatus.status,
+        keterangan: absenStatus.keterangan,
       });
 
       return {
@@ -89,7 +109,8 @@ export const absensiRouter = createRouter({
           tanggal: today,
           shift: input.shift,
           jamMasuk: now,
-          status,
+          status: absenStatus.status,
+          keterangan: absenStatus.keterangan,
         },
       };
     }),
