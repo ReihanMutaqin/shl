@@ -513,6 +513,18 @@ export default function Absen() {
           <Button
             variant="outline"
             className="w-full h-12 justify-between text-left"
+            onClick={() => navigate("/riwayat")}
+          >
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Riwayat Absensi
+            </span>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full h-12 justify-between text-left"
             onClick={() => navigate("/cuti")}
           >
             <span className="flex items-center gap-2">

@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Absen from "./pages/Absen";
+import Riwayat from "./pages/Riwayat";
 import Cuti from "./pages/Cuti";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPegawai from "./pages/AdminPegawai";
@@ -60,6 +61,14 @@ export default function App() {
         element={
           <PegawaiRoute>
             <Absen />
+          </PegawaiRoute>
+        }
+      />
+      <Route
+        path="/riwayat"
+        element={
+          <PegawaiRoute>
+            <Riwayat />
           </PegawaiRoute>
         }
       />
