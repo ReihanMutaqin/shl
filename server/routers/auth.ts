@@ -81,7 +81,10 @@ export const authRouter = createRouter({
     }),
 
   logout: authedQuery.mutation(async ({ ctx }) => {
-    const token = getCookie(ctx.req.headers.get("cookie") || "", "session_token");
+    const cookieHeader = typeof ctx.req.headers.get === "function" 
+      ? ctx.req.headers.get("cookie") 
+      : (ctx.req.headers as any).cookie;
+    const token = getCookie(cookieHeader || "", "session_token");
     if (token) {
       const db = getDb();
       await db.delete(sessions).where(eq(sessions.token, token));
@@ -90,7 +93,10 @@ export const authRouter = createRouter({
   }),
 
   me: publicQuery.query(async ({ ctx }) => {
-    const token = getCookie(ctx.req.headers.get("cookie") || "", "session_token");
+    const cookieHeader = typeof ctx.req.headers.get === "function" 
+      ? ctx.req.headers.get("cookie") 
+      : (ctx.req.headers as any).cookie;
+    const token = getCookie(cookieHeader || "", "session_token");
     if (!token) return null;
 
     const payload = await verifySessionToken(token);

@@ -14,7 +14,10 @@ export const publicQuery = t.procedure;
 
 // Authed procedure - checks session from cookie
 export const authedQuery = t.procedure.use(async ({ ctx, next }) => {
-  const token = getCookie(ctx.req.headers.get("cookie") || "", "session_token");
+  const cookieHeader = typeof ctx.req.headers.get === "function" 
+    ? ctx.req.headers.get("cookie") 
+    : (ctx.req.headers as any).cookie;
+  const token = getCookie(cookieHeader || "", "session_token");
 
   if (!token) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Sesi tidak valid" });
@@ -42,7 +45,10 @@ export const authedQuery = t.procedure.use(async ({ ctx, next }) => {
 
 // Admin procedure - checks session + admin role
 export const adminQuery = t.procedure.use(async ({ ctx, next }) => {
-  const token = getCookie(ctx.req.headers.get("cookie") || "", "session_token");
+  const cookieHeader = typeof ctx.req.headers.get === "function" 
+    ? ctx.req.headers.get("cookie") 
+    : (ctx.req.headers as any).cookie;
+  const token = getCookie(cookieHeader || "", "session_token");
 
   if (!token) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "Sesi tidak valid" });
