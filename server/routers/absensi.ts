@@ -14,13 +14,22 @@ const SHIFT_JAM_MASUK: Record<string, string> = {
   "malam+pagi": "21:00",
 };
 
+function getTodayStr(dateObj = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(dateObj);
+}
+
 function getStatusAbsensi(shift: string, jamMasuk: Date): { status: "hadir" | "terlambat", keterangan: string | null, isTooEarly: boolean } {
   const jamMasukStr = SHIFT_JAM_MASUK[shift];
   if (!jamMasukStr) return { status: "hadir", keterangan: null, isTooEarly: false };
 
-  const [jam, menit] = jamMasukStr.split(":").map(Number);
-  const batas = new Date(jamMasuk);
-  batas.setHours(jam, menit, 0, 0);
+  // Construct WIB target time string: "YYYY-MM-DDTHH:mm:00+07:00"
+  const todayWIBStr = getTodayStr(jamMasuk);
+  const batas = new Date(`${todayWIBStr}T${jamMasukStr}:00+07:00`);
 
   const diffMs = jamMasuk.getTime() - batas.getTime();
   const diffMins = Math.floor(diffMs / 60000);
@@ -38,10 +47,6 @@ function getStatusAbsensi(shift: string, jamMasuk: Date): { status: "hadir" | "t
   }
 
   return { status: "hadir", keterangan: null, isTooEarly: false };
-}
-
-function getTodayStr(): string {
-  return new Date().toISOString().split("T")[0];
 }
 
 function dateBetweenSql(bulan: number, tahun: number) {
