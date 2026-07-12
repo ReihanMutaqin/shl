@@ -1,16 +1,16 @@
-import { createNextApiHandler } from "@trpc/server/adapters/next";
+import { nodeHTTPRequestHandler } from "@trpc/server/adapters/node-http";
 import { appRouter } from "../../server/router.js";
 import { createContext } from "../../server/context.js";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "50mb",
-    },
-  },
-};
-
-export default createNextApiHandler({
-  router: appRouter,
-  createContext,
-});
+export default async function handler(req: any, res: any) {
+  // Extract the path after /api/trpc/
+  const path = (req.url || "").split("?")[0].replace("/api/trpc/", "");
+  
+  return nodeHTTPRequestHandler({
+    router: appRouter,
+    createContext,
+    req,
+    res,
+    path,
+  });
+}
