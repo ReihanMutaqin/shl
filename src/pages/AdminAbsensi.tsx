@@ -20,6 +20,7 @@ import {
   Calendar,
   Clock,
   Filter,
+  Trash2,
 } from "lucide-react";
 
 const BULAN = [
@@ -39,6 +40,7 @@ const BULAN = [
 
 export default function AdminAbsensi() {
   const navigate = useNavigate();
+  const utils = trpc.useUtils();
 
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -53,6 +55,14 @@ export default function AdminAbsensi() {
     bulan,
     tahun,
     departemen: departemen || undefined,
+  });
+
+  const deleteMutation = trpc.absensi.delete.useMutation({
+    onSuccess: () => {
+      utils.absensi.getAll.invalidate();
+      utils.absensi.getStats.invalidate();
+      utils.absensi.todayOverview.invalidate();
+    },
   });
 
   const { data: activePegawai } = trpc.pegawai.listActive.useQuery();
@@ -180,7 +190,8 @@ export default function AdminAbsensi() {
                       <th className="pb-3 pr-4 font-medium hidden sm:table-cell">Jam Masuk</th>
                       <th className="pb-3 pr-4 font-medium hidden sm:table-cell">Jam Keluar</th>
                       <th className="pb-3 pr-4 font-medium">Foto</th>
-                      <th className="pb-3 font-medium">Status</th>
+                      <th className="pb-3 pr-4 font-medium">Status</th>
+                      <th className="pb-3 font-medium text-right">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -250,7 +261,7 @@ export default function AdminAbsensi() {
                             )}
                           </div>
                         </td>
-                        <td className="py-3">
+                        <td className="py-3 pr-4">
                           <div className="flex flex-col items-start gap-1">
                             <Badge className={`${getStatusColor(a.status)} text-xs capitalize`}>
                               {a.status}
@@ -261,6 +272,21 @@ export default function AdminAbsensi() {
                               </span>
                             )}
                           </div>
+                        </td>
+                        <td className="py-3 text-right">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => {
+                              if (confirm("Yakin ingin menghapus data absensi ini?")) {
+                                deleteMutation.mutate({ id: a.id });
+                              }
+                            }}
+                            disabled={deleteMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </td>
                       </tr>
                     ))}

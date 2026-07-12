@@ -316,4 +316,12 @@ export const absensiRouter = createRouter({
 
     return data;
   }),
+
+  delete: adminQuery
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = getDb();
+      await db.delete(absensi).where(eq(absensi.id, input.id));
+      return { success: true };
+    }),
 });
