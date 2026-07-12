@@ -15,6 +15,11 @@ app.use(cors({
 }));
 
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
+
+app.get("/api/test", (c) => {
+  return c.json({ status: "alive" });
+});
+
 app.use("/api/trpc/*", async (c) => {
   return fetchRequestHandler({
     endpoint: "/api/trpc",
