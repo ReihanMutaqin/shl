@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { bodyLimit } from "hono/body-limit";
+
 import { cors } from "hono/cors";
 import type { HttpBindings } from "@hono/node-server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
@@ -18,7 +18,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
+
 
 app.get("/api/test", (c) => {
   return c.json({ status: "alive" });
