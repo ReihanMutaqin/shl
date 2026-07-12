@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pegawai, absensi, cuti, sessions } from "./schema";
+import { pegawai, absensi, cuti, sessions } from "./schema.js";
 
 export const pegawaiRelations = relations(pegawai, ({ many }) => ({
   absensi: many(absensi),
