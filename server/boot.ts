@@ -32,14 +32,14 @@ app.all("/api/*", (c) => c.json({ error: "Not Found" }, 404));
 
 export default app;
 
-// Do not start a standalone Node server if we are running inside Vercel serverless functions
-if (env.isProduction && !process.env.VERCEL) {
-  const { serve } = await import("@hono/node-server");
-  const { serveStaticFiles } = await import("./lib/vite.js");
-  serveStaticFiles(app);
-
-  const port = parseInt(process.env.PORT || "3000");
-  serve({ fetch: app.fetch, port }, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-  });
-}
+// Standalone server removed for Vercel compatibility
+// if (env.isProduction && !process.env.VERCEL) {
+//   const { serve } = await import("@hono/node-server");
+//   const { serveStaticFiles } = await import("./lib/vite.js");
+//   serveStaticFiles(app);
+// 
+//   const port = parseInt(process.env.PORT || "3000");
+//   serve({ fetch: app.fetch, port }, () => {
+//     console.log(`Server running on http://localhost:${port}/`);
+//   });
+// }
